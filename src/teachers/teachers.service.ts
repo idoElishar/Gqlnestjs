@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {                                                                     Teacher } from './interfaces/teacher.interface';
 import { TeacherInput } from 'src/inputs/teacher.inputs';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class TeachersService {
@@ -29,4 +30,19 @@ export class TeachersService {
     const result = await this.TeacherModel.deleteOne({ _id: TeacherId }).exec();
     return { deleted: result.deletedCount > 0 };
   }
+  
+  async login(email: string, password: string): Promise<Teacher> {
+    const teacher = await this.TeacherModel.findOne({ email }).exec();
+    
+    if (!teacher) {
+      throw new UnauthorizedException('פרטי ההתחברות אינם נכונים');
+    }
+  
+    if (teacher.password !== password) {
+      throw new UnauthorizedException('פרטי ההתחברות אינם נכונים');
+    }
+
+    return teacher; 
+  }
+  
 }

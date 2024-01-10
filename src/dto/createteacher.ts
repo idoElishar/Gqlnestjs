@@ -7,6 +7,8 @@ export class TeacherType {
     @Field(()=>ID)
     readonly id: string;
     @Field()
+    readonly name: string;  
+    @Field()
     readonly phone: string;
     @Field()
     readonly address: string;
@@ -16,6 +18,8 @@ export class TeacherType {
     readonly course: string; 
     @Field()
     readonly images: string;
+    @Field()
+    readonly password: string;
   }
 
   

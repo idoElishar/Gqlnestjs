@@ -34,4 +34,9 @@ export class TeacherInput {
     @IsString()
     @IsNotEmpty()
     readonly images: string;
+
+    @Field()
+    @IsString()
+    @IsNotEmpty()
+    readonly password: string;
 }

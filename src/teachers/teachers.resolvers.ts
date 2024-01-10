@@ -35,4 +35,12 @@ export class TeachersResolver {
     const result = await this.teachersService.delete(id);
     return result.deleted;
   }
+  @Mutation(() => TeacherType) // או TeacherLoginResponse, בהתאם לטיפוס שיצרת
+  async login(
+    @Args('email') email: string, 
+    @Args('password') password: string,
+  ) {
+    return this.teachersService.login(email, password);
+  }
+
 }

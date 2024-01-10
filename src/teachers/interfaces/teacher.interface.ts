@@ -8,4 +8,6 @@ export interface Teacher extends Document{
     readonly email:string;
     readonly course:string;
     readonly images:string;
+    readonly password:string;
+
 }

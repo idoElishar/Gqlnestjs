@@ -8,5 +8,6 @@ export const TeacherSchema = new mongoose.Schema({
     email:String,
     course:String,
     images:String,
+    password:String
 }, { versionKey: false });
 
