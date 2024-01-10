@@ -18,4 +18,16 @@ export class CatsService {
   async findAll(): Promise<Cat[]> {
     return this.catModel.find().exec();
   }
+  
+  async findById(catId: string): Promise<Cat> {
+    return this.catModel.findById(catId).exec();
+  }
+  async update(catId: string, updateData: CatInput): Promise<Cat> {
+    return this.catModel.findByIdAndUpdate(catId, updateData, { new: true }).exec();
+  }
+
+    async delete(catId: string): Promise<{ deleted: boolean }> {
+    const result = await this.catModel.deleteOne({ _id: catId }).exec();
+    return { deleted: result.deletedCount > 0 };
+  }
 }

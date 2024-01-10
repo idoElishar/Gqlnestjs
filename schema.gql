@@ -12,10 +12,13 @@ type CatType {
 type Query {
   hello: String!
   cats: [CatType!]!
+  cat(id: String!): CatType!
 }
 
 type Mutation {
-  Createcat(input: CatInput!): [CatType!]!
+  Createcat(input: CatInput!): CatType!
+  updateCat(id: String!, input: CatInput!): CatType!
+  deleteCat(id: String!): Boolean!
 }
 
 input CatInput {

@@ -18,8 +18,21 @@ export class CatsResolver {
   async cats() {
     return this.catsService.findAll();
   }
-  @Mutation(()=>[CatType])
+  @Query(() => CatType)
+  async cat(@Args('id') id: string) {
+    return this.catsService.findById(id);
+  }
+  @Mutation(()=>CatType)
   async Createcat(@Args('input')input:CatInput){
     return this.catsService.create(input);
+  }
+  @Mutation(() => CatType)
+  async updateCat(@Args('id') id: string, @Args('input') input: CatInput) {
+    return this.catsService.update(id, input);
+  }
+  @Mutation(() => Boolean)
+  async deleteCat(@Args('id') id: string) {
+    const result = await this.catsService.delete(id);
+    return result.deleted;
   }
 }
