@@ -9,20 +9,43 @@ type CatType {
   breed: String!
 }
 
+type TeacherType {
+  id: ID!
+  phone: String!
+  address: String!
+  email: String!
+  course: String!
+  images: String!
+}
+
 type Query {
   hello: String!
   cats: [CatType!]!
   cat(id: String!): CatType!
+  Teachers: [TeacherType!]!
+  Teacher(id: String!): TeacherType!
 }
 
 type Mutation {
   Createcat(input: CatInput!): CatType!
   updateCat(id: String!, input: CatInput!): CatType!
   deleteCat(id: String!): Boolean!
+  CreateTeacher(input: TeacherInput!): TeacherType!
+  updateTeacher(id: String!, input: TeacherInput!): TeacherType!
+  deleteTeacher(id: String!): Boolean!
 }
 
 input CatInput {
   name: String!
   age: Int!
   breed: String!
+}
+
+input TeacherInput {
+  name: String!
+  phone: String!
+  address: String!
+  email: String!
+  course: String!
+  images: String!
 }
