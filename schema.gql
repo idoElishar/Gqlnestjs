@@ -20,6 +20,10 @@ type TeacherType {
   password: String!
 }
 
+type LoginResponse {
+  access_token: String!
+}
+
 type Query {
   hello: String!
   cats: [CatType!]!
@@ -35,7 +39,7 @@ type Mutation {
   CreateTeacher(input: TeacherInput!): TeacherType!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
-  login(email: String!, password: String!): TeacherType!
+  login(email: String!, password: String!): LoginResponse!
 }
 
 input CatInput {

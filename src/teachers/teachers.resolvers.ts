@@ -2,7 +2,7 @@
 
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TeachersService } from './Teachers.service';
-import { TeacherType } from 'src/dto/createteacher';
+import { LoginResponse, TeacherType } from 'src/dto/createteacher';
 import { TeacherInput } from 'src/inputs/teacher.inputs';
 
 @Resolver()
@@ -35,7 +35,7 @@ export class TeachersResolver {
     const result = await this.teachersService.delete(id);
     return result.deleted;
   }
-  @Mutation(() => TeacherType) // או TeacherLoginResponse, בהתאם לטיפוס שיצרת
+  @Mutation(() => LoginResponse) // או TeacherLoginResponse, בהתאם לטיפוס שיצרת
   async login(
     @Args('email') email: string, 
     @Args('password') password: string,

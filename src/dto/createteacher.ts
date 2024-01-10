@@ -22,4 +22,8 @@ export class TeacherType {
     readonly password: string;
   }
 
-  
+  @ObjectType()
+export class LoginResponse {
+  @Field()
+  readonly access_token: string;
+}
