@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TeacherSchema } from './teachers.schema';
 import { TeachersService } from './Teachers.service';
 import { JwtModule } from '@nestjs/jwt';
+import { RedisService } from 'src/redis/redis.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Teacher', schema: TeacherSchema }]),
@@ -15,6 +16,6 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '24h' },
     }),
   ],
-  providers: [TeachersResolver, TeachersService],
+  providers: [TeachersResolver, TeachersService,RedisService],
 })
 export class TeachersModule {}
