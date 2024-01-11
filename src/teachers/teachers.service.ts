@@ -33,10 +33,24 @@ export class TeachersService {
     return this.TeacherModel.findByIdAndUpdate(TeacherId, updateData, { new: true }).exec();
   }
 
-  async delete(TeacherId: string): Promise<{ deleted: boolean }> {
+  async delete(TeacherId: string, headers?: { authorization: any }): Promise<boolean> {
+    if (!headers) {
+      throw new UnauthorizedException('Missing authorization header, please provide a valid token');
+    }
+  
+    const token = headers.authorization.split(' ')[1]; 
+    const decoded = this.jwtService.verify(token);
+//   רק המורה שהתחבר יכול למחוק
+    const userId = decoded['sub'];
+  
+    if (userId !== TeacherId) {
+      throw new UnauthorizedException('Unauthorized to delete this teacher, you are not the owner of this teacher');
+    }
+  
     const result = await this.TeacherModel.deleteOne({ _id: TeacherId }).exec();
-    return { deleted: result.deletedCount > 0 };
+    return result.deletedCount > 0;
   }
+  
 
   async login(email: string, password: string): Promise<any> {
     const teacher = await this.TeacherModel.findOne({ email }).exec();
@@ -51,7 +65,7 @@ export class TeachersService {
 
     const payload = { email: teacher.email, sub: teacher.id };
     return {
-      access_token: this.jwtService.sign(payload), // יצירת טוקן JWT
+      access_token: this.jwtService.sign(payload), 
     };
 
   }

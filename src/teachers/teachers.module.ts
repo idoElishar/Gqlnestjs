@@ -10,8 +10,8 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Teacher', schema: TeacherSchema }]),
-    JwtModule.register({ // הוסף את הייבוא של JwtModule עם הגדרות
-      secret: 'mySuperSecretKey', // אתה יכול להשתמש באותו מפתח סודי כמו ב-AppModule
+    JwtModule.register({ 
+      secret: 'mySuperSecretKey', 
       signOptions: { expiresIn: '24h' },
     }),
   ],
