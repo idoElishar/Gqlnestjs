@@ -13,8 +13,5 @@ export class RedisService {
       port: 13369,
       password: 'O1FvT3RD4Z0cX4WBnfzP9zoU5F1PQomB',
     });
-    this.client.connect().catch((error) => 
-    console.error('Redis connection error:', error));
   }
-
 }

@@ -36,7 +36,6 @@ type Mutation {
   Createcat(input: CatInput!): CatType!
   updateCat(id: String!, input: CatInput!): CatType!
   deleteCat(id: String!): Boolean!
-  CreateTeacher(input: TeacherInput!): TeacherType!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!

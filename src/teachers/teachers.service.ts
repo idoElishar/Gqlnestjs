@@ -38,6 +38,7 @@ export class TeachersService {
       throw new UnauthorizedException('Missing authorization header, please provide a valid token');
     }
   
+    
     const token = headers.authorization.split(' ')[1]; 
     const decoded = this.jwtService.verify(token);
 //   רק המורה שהתחבר יכול למחוק

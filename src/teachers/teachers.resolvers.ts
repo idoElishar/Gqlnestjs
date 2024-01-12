@@ -11,7 +11,7 @@ export class TeachersResolver {
   constructor(
     private readonly teachersService: TeachersService,
     private readonly redisService: RedisService, // הוסף את RedisService
-  ) {}
+  ) { }
   @Query(() => String)
   async hello() {
     return 'hello';
@@ -34,6 +34,7 @@ export class TeachersResolver {
 
     return this.teachersService.findAll();
   }
+
   @Query(() => TeacherType)
   async Teacher(@Args('id') id: string) {
     const cacheKey = `teacher:${id}`;
@@ -41,46 +42,101 @@ export class TeachersResolver {
 
     if (cachedTeacher) {
       console.log('Returning teacher from Redis cache:', id);
-      const teacher = JSON.parse(cachedTeacher);
-      console.log(teacher._doc);
+      const cachedData = JSON.parse(cachedTeacher);
 
-      teacher.id = teacher._id;
+      if (!cachedData._doc) {
+        console.error('Invalid data structure from Redis cache:', cachedData);
+        return null;
+      }
 
-      return teacher._doc;
+      const teacher = {
+        ...cachedData._doc,
+        id: cachedData._doc._id
+      };
+
+      console.log('Processed teacher data:', teacher);
+      return teacher;
     }
 
     console.log('Fetching teacher from the service:', id);
     const teacher = await this.teachersService.findById(id);
 
     if (teacher) {
+      console.log('Teacher data:', teacher);
+
       await this.redisService.client.set(
         cacheKey,
-        JSON.stringify({ ...teacher, id: teacher._id, _id: undefined }),
+        JSON.stringify(teacher)
       );
+    } else {
+      console.error('Teacher not found:', id);
     }
 
     return teacher;
   }
 
-  @Mutation(() => TeacherType)
-  async CreateTeacher(@Args('input') input: TeacherInput) {
-    return this.teachersService.create(input);
-  }
+
+
+
   @Mutation(() => TeacherType)
   async updateTeacher(
     @Args('id') id: string,
     @Args('input') input: TeacherInput,
   ) {
-    return this.teachersService.update(id, input);
+    const updatedTeacher = await this.teachersService.update(id, input);
+  
+    if (updatedTeacher) {
+      console.log('Updated teacher data:', updatedTeacher);
+  
+      const cacheKey = `teacher:${id}`;
+  
+      const cachedTeacher = await this.redisService.client.get(cacheKey);
+  
+      if (cachedTeacher) {
+        console.log('Teacher found in Redis cache, updating:', id);
+  
+        await this.redisService.client.set(
+          cacheKey,
+          JSON.stringify(updatedTeacher)
+        );
+      } else {
+        console.log('Teacher not found in Redis cache, adding:', id);
+  
+        await this.redisService.client.set(
+          cacheKey,
+          JSON.stringify(updatedTeacher)
+        );
+      }
+      console.log('Updated/Added teacher data in Redis cache:', id);
+    } else {
+      console.error('Failed to update teacher:', id);
+    }
+  
+    return updatedTeacher;
   }
   @Mutation(() => Boolean)
-  async deleteTeacher(
-    @Args('id') id: string,
-    @Context() context: any,
-  ): Promise<boolean> {
-    const token = context.req.headers.authorization;
-    return this.teachersService.delete(id, { authorization: token });
+async deleteTeacher(
+  @Args('id') id: string,
+  @Context() context: any,
+): Promise<boolean> {
+  const token = context.req.headers.authorization;
+
+  const result = await this.teachersService.delete(id, { authorization: token });
+
+  if (result) {
+    console.log('Teacher deleted from database:', id);
+
+    const cacheKey = `teacher:${id}`;
+
+    await this.redisService.client.del(cacheKey);
+    console.log('Teacher removed from Redis cache:', id);
+  } else {
+    console.error('Failed to delete teacher:', id);
   }
+
+  return result;
+}
+
 
   @Mutation(() => LoginResponse)
   async login(
