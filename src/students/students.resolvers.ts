@@ -3,7 +3,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StudentsService } from './Students.service';
 import { StudentType } from 'src/dto/createstudent.dto';
-import { StudentInput } from 'src/inputs/student.input';
+import { LoginInput, StudentInput } from 'src/inputs/student.input';
 import { RedisService } from 'src/redis/redis.service';
 
 @Resolver()
@@ -38,6 +38,19 @@ export class StudentsResolver {
     const updatedStudent = await this.studentsService.update(id, updateStudentInput);
     return updatedStudent;
   }
-
-
+  @Mutation(() => Boolean)
+  async deleteStudent(@Args('id') id: string) {
+    console.log('Deleting student with ID:', id);
+    await this.studentsService.delete(id);
+    return true;
+  }
+  @Mutation(() => StudentType) // או LoginResponseType, בהתאם למבנה הנתונים שלך
+  async loginStudent(@Args('loginInput') loginInput: LoginInput) {
+    console.log('Logging in student:', loginInput);
+    const student = await this.studentsService.loginStudent(loginInput.email, loginInput.password);
+    if (!student) {
+      throw new Error('Invalid credentials');
+    }
+    return student;
+  }
 }

@@ -10,7 +10,8 @@ const StudentSchema = new mongoose.Schema({
   phone: String,
   address: String,
   email: String,
-  courses: [CourseSchema]
+  courses: [CourseSchema],
+  password: String
 }, { versionKey: false });
 
 export { StudentSchema, CourseSchema};

@@ -35,4 +35,20 @@ export class StudentInput {
     @IsArray()  // Add this validation
     readonly courses?: Courseinput[];
 
+
+    @Field()
+    @IsString()
+    @IsNotEmpty()
+    readonly password: string;
+}
+
+
+
+@InputType()
+export class LoginInput {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
 }

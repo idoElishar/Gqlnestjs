@@ -53,6 +53,8 @@ type Mutation {
   deleteCat(id: String!): Boolean!
   addStudent(createStudentInput: StudentInput!): StudentType!
   updateStudent(id: String!, updateStudentInput: StudentInput!): StudentType!
+  deleteStudent(id: String!): Boolean!
+  loginStudent(loginInput: LoginInput!): StudentType!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!
@@ -70,10 +72,16 @@ input StudentInput {
   address: String!
   email: String!
   courses: [Courseinput!]!
+  password: String!
 }
 
 input Courseinput {
   name: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 input TeacherInput {

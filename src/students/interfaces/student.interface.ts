@@ -11,4 +11,5 @@ interface Course {
     readonly address: string;
     readonly email: string;
     readonly courses: Course[];
+    readonly password: string;
   }

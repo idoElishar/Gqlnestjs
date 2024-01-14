@@ -29,4 +29,15 @@ export class StudentsService {
     const updatedStudent = await this.StudentModel.findByIdAndUpdate(id, updateStudentDto, { new: true });
     return updatedStudent;
   }
+  async delete(id: string): Promise<boolean> {
+    const result = await this.StudentModel.findByIdAndDelete(id).exec();
+    return result != null;
+  }
+  async loginStudent(email: string, password: string): Promise<Student | null> {
+    const student = await this.StudentModel.findOne({ email }).exec();
+    if (student && student.password === password) {
+      return student;
+    }
+    return null;
+  }
 }
