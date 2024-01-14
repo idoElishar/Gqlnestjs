@@ -24,10 +24,25 @@ type LoginResponse {
   access_token: String!
 }
 
+type StudentType {
+  id: ID!
+  name: String!
+  phone: String!
+  address: String!
+  email: String!
+  courses: [Course!]!
+}
+
+type Course {
+  name: String!
+}
+
 type Query {
   hello: String!
   cats: [CatType!]!
   cat(id: String!): CatType!
+  Students: [StudentType!]!
+  Student(id: String!): StudentType!
   Teachers: [TeacherType!]!
   Teacher(id: String!): TeacherType!
 }
@@ -36,6 +51,8 @@ type Mutation {
   Createcat(input: CatInput!): CatType!
   updateCat(id: String!, input: CatInput!): CatType!
   deleteCat(id: String!): Boolean!
+  addStudent(createStudentInput: StudentInput!): StudentType!
+  updateStudent(id: String!, updateStudentInput: StudentInput!): StudentType!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!
@@ -45,6 +62,18 @@ input CatInput {
   name: String!
   age: Int!
   breed: String!
+}
+
+input StudentInput {
+  name: String!
+  phone: String!
+  address: String!
+  email: String!
+  courses: [Courseinput!]!
+}
+
+input Courseinput {
+  name: String!
 }
 
 input TeacherInput {

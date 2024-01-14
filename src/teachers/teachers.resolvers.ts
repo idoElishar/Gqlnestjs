@@ -16,6 +16,7 @@ export class TeachersResolver {
   async hello() {
     return 'hello';
   }
+
   @Query(() => [TeacherType])
   async Teachers() {
     const cachedUsers = await this.redisService.client.keys('*');
@@ -114,6 +115,7 @@ export class TeachersResolver {
   
     return updatedTeacher;
   }
+  
   @Mutation(() => Boolean)
 async deleteTeacher(
   @Args('id') id: string,

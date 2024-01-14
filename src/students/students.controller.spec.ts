@@ -7,22 +7,23 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CatsModule } from './cats/cats.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TeachersModule } from './teachers/teachers.module';
-import { StudentsModule } from './students/students.module';
 // import { JwtModule } from '@nestjs/jwt';
+import { StudentsController } from '../../../15.1/Gqlnestjs/src/students/students.resolvers';
+import { StudentsService } from '../../../15.1/Gqlnestjs/src/students/students.service';
 
 @Module({
   imports: [
     CatsModule,
-StudentsModule,
     TeachersModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
-    MongooseModule.forRoot('mongodb+srv://ido:tgbyhn67@cluster0.11bdobw.mongodb.net/Project'),
+    MongooseModule.forRoot(
+      'mongodb+srv://ido:tgbyhn67@cluster0.11bdobw.mongodb.net/Project',
+    ),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, StudentsController],
+  providers: [AppService, StudentsService],
 })
 export class AppModule {}
-
