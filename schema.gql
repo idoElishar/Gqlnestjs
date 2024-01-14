@@ -37,6 +37,29 @@ type Course {
   name: String!
 }
 
+type CourseType {
+  id: ID!
+  courseName: String!
+  description: String!
+  lectures: [Lecture!]!
+  exercises: [Exercise!]!
+  lecturer: String!
+  imageURL: String!
+  topicsCovered: [TopicCovered!]!
+}
+
+type Lecture {
+  title: String!
+}
+
+type Exercise {
+  title: String!
+}
+
+type TopicCovered {
+  topic: String!
+}
+
 type Query {
   hello: String!
   cats: [CatType!]!
@@ -45,6 +68,8 @@ type Query {
   Student(id: String!): StudentType!
   Teachers: [TeacherType!]!
   Teacher(id: String!): TeacherType!
+  Courses: [CourseType!]!
+  Course(id: String!): CourseType!
 }
 
 type Mutation {
@@ -58,6 +83,8 @@ type Mutation {
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!
+  addCourse(createCourseInput: CourseInput!): CourseType!
+  updateCourse(id: String!, updateCourseInput: CourseInput!): CourseType!
 }
 
 input CatInput {
@@ -92,4 +119,26 @@ input TeacherInput {
   course: String!
   images: String!
   password: String!
+}
+
+input CourseInput {
+  courseName: String!
+  description: String!
+  lectures: [LectureInput!]!
+  exercises: [ExerciseInput!]!
+  topicsCovered: [TopicCoveredInput!]!
+  lecturer: String!
+  imageURL: String!
+}
+
+input LectureInput {
+  title: String!
+}
+
+input ExerciseInput {
+  title: String!
+}
+
+input TopicCoveredInput {
+  topic: String!
 }

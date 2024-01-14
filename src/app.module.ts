@@ -8,6 +8,7 @@ import { CatsModule } from './cats/cats.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TeachersModule } from './teachers/teachers.module';
 import { StudentsModule } from './students/students.module';
+import { CoursesModule } from './courses/courses.module';
 // import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -15,6 +16,7 @@ import { StudentsModule } from './students/students.module';
     CatsModule,
 StudentsModule,
     TeachersModule,
+    CoursesModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
