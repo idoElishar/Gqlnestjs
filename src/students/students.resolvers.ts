@@ -44,7 +44,7 @@ export class StudentsResolver {
     await this.studentsService.delete(id);
     return true;
   }
-  @Mutation(() => StudentType) // או LoginResponseType, בהתאם למבנה הנתונים שלך
+  @Mutation(() => StudentType) 
   async loginStudent(@Args('loginInput') loginInput: LoginInput) {
     console.log('Logging in student:', loginInput);
     const student = await this.studentsService.loginStudent(loginInput.email, loginInput.password);

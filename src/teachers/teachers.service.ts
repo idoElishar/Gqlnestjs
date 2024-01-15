@@ -7,15 +7,14 @@ import { Teacher } from './interfaces/teacher.interface';
 import { TeacherInput } from 'src/inputs/teacher.inputs';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'; // ייבוא JwtService
+// import { LoginGuard } from 'src/guards/loginStudent.guards';
 
 @Injectable()
 export class TeachersService {
   constructor(
     @InjectModel('Teacher') private TeacherModel: Model<Teacher>,
-    private jwtService: JwtService // הוספת JwtService כתלות
-  ) { }
-
-
+    private jwtService: JwtService, // הוספת JwtService כתלות
+  ) {}
 
   async create(createTeacherDto: TeacherInput): Promise<Teacher> {
     const createdTeacher = new this.TeacherModel(createTeacherDto);
@@ -30,7 +29,9 @@ export class TeachersService {
     return this.TeacherModel.findById(TeacherId).exec();
   }
   async update(TeacherId: string, updateData: TeacherInput): Promise<Teacher> {
-    return this.TeacherModel.findByIdAndUpdate(TeacherId, updateData, { new: true }).exec();
+    return this.TeacherModel.findByIdAndUpdate(TeacherId, updateData, {
+      new: true,
+    }).exec();
   }
 
   async delete(TeacherId: string, headers?: { authorization: any }): Promise<boolean> {
@@ -51,23 +52,22 @@ export class TeachersService {
     const result = await this.TeacherModel.deleteOne({ _id: TeacherId }).exec();
     return result.deletedCount > 0;
   }
-  
 
   async login(email: string, password: string): Promise<any> {
     const teacher = await this.TeacherModel.findOne({ email }).exec();
+    console.log('teacher ' + teacher);
 
     if (!teacher) {
       throw new UnauthorizedException('פרטי ההתחברות אינם נכונים');
     }
 
     if (teacher.password !== password) {
-      throw new UnauthorizedException('פרטי ההתחברות אינם נכונים');
+      throw new UnauthorizedException('פרטי הסיסמא אינם נכונים');
     }
 
     const payload = { email: teacher.email, sub: teacher.id };
     return {
-      access_token: this.jwtService.sign(payload), 
+      access_token: this.jwtService.sign(payload),
     };
-
   }
 }

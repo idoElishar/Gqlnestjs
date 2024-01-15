@@ -5,12 +5,15 @@ import { TeachersService } from './Teachers.service';
 import { LoginResponse, TeacherType } from 'src/dto/createteacher';
 import { TeacherInput } from 'src/inputs/teacher.inputs';
 import { RedisService } from 'src/redis/redis.service';
+import {  UsePipes, ValidationPipe } from '@nestjs/common';
+
+
 
 @Resolver()
 export class TeachersResolver {
   constructor(
     private readonly teachersService: TeachersService,
-    private readonly redisService: RedisService, // הוסף את RedisService
+    private readonly redisService: RedisService, 
   ) { }
   @Query(() => String)
   async hello() {
@@ -29,7 +32,7 @@ export class TeachersResolver {
 
       return usersFromRedis.map((userJson) => {
         const user = JSON.parse(userJson);
-        return { ...user, id: user._id, _id: undefined }; // החלף את _id ב-id
+        return { ...user, id: user._id, _id: undefined }; 
       });
     }
 
@@ -80,6 +83,7 @@ export class TeachersResolver {
 
 
   @Mutation(() => TeacherType)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateTeacher(
     @Args('id') id: string,
     @Args('input') input: TeacherInput,
@@ -115,29 +119,26 @@ export class TeachersResolver {
   
     return updatedTeacher;
   }
-  
   @Mutation(() => Boolean)
-async deleteTeacher(
-  @Args('id') id: string,
-  @Context() context: any,
-): Promise<boolean> {
-  const token = context.req.headers.authorization;
-
-  const result = await this.teachersService.delete(id, { authorization: token });
-
-  if (result) {
-    console.log('Teacher deleted from database:', id);
-
-    const cacheKey = `teacher:${id}`;
-
-    await this.redisService.client.del(cacheKey);
-    console.log('Teacher removed from Redis cache:', id);
-  } else {
-    console.error('Failed to delete teacher:', id);
+  async deleteTeacher(
+    @Args('id') id: string,
+    @Context() context: any,
+  ): Promise<boolean> {
+    const token = context.req.headers.authorization;
+    const result = await this.teachersService.delete(id, { authorization: token });
+    if (result) {
+      console.log('Teacher deleted from database:', id);
+  
+      const cacheKey = `teacher:${id}`;
+  
+      await this.redisService.client.del(cacheKey);
+      console.log('Teacher removed from Redis cache:', id);
+    } else {
+      console.error('Failed to delete teacher:', id);
+    }
+  
+    return result;
   }
-
-  return result;
-}
 
 
   @Mutation(() => LoginResponse)
