@@ -13,7 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 export class StudentsService {
   constructor(
     @InjectModel('Student') private StudentModel: Model<Student>,
-    private jwtService: JwtService, // הוספת JwtService כתלות
+    private jwtService: JwtService, 
   ) {}
   async findAll(): Promise<Student[]> {
     return this.StudentModel.find().exec();

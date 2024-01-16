@@ -2,10 +2,11 @@
 
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StudentsService } from './Students.service';
-import { StudentType } from 'src/dto/createstudent.dto';
-import { LoginInput, StudentInput } from 'src/inputs/student.input';
-import { RedisService } from 'src/redis/redis.service';
-import { LoginResponse } from 'src/dto/createteacher';
+import { StudentType } from '../dto/createstudent.dto';
+
+import { LoginInput, StudentInput } from '../inputs/student.input';
+import { RedisService } from '../redis/redis.service';
+import { LoginResponse } from '../dto/createteacher';
 
 @Resolver()
 export class StudentsResolver {
@@ -18,7 +19,7 @@ export class StudentsResolver {
     return 'hello';
   }
   @Query(() => [StudentType])
-  async Students() {
+  async findAllStudents() {
     const cachedUsers = await this.redisService.client.keys('student:*');
     if (cachedUsers.length > 0) {
       const usersFromRedis = await Promise.all(
