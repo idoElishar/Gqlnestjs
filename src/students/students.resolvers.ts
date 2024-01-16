@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
 
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StudentsService } from './Students.service';
 import { StudentType } from 'src/dto/createstudent.dto';
 import { LoginInput, StudentInput } from 'src/inputs/student.input';
 import { RedisService } from 'src/redis/redis.service';
+import { LoginResponse } from 'src/dto/createteacher';
 
 @Resolver()
 export class StudentsResolver {
@@ -28,26 +29,45 @@ export class StudentsResolver {
     return student;
   }
   @Mutation(() => StudentType)
-  async addStudent(@Args('createStudentInput') createStudentInput: StudentInput) {
+  async addStudent(
+    @Args('createStudentInput') createStudentInput: StudentInput,
+  ) {
     console.log('Adding new student:', createStudentInput);
     const newStudent = await this.studentsService.create(createStudentInput);
     return newStudent;
   }
   @Mutation(() => StudentType)
-  async updateStudent(@Args('id') id: string, @Args('updateStudentInput') updateStudentInput: StudentInput) {
-    const updatedStudent = await this.studentsService.update(id, updateStudentInput);
+  async updateStudent(
+    @Args('id') id: string,
+    @Args('updateStudentInput') updateStudentInput: StudentInput,
+  ) {
+    const updatedStudent = await this.studentsService.update(
+      id,
+      updateStudentInput,
+    );
     return updatedStudent;
   }
   @Mutation(() => Boolean)
-  async deleteStudent(@Args('id') id: string) {
+  async deleteStudent(@Args('id') id: string, @Context() context: any) {
+    const token = context.req.headers.authorization;
+
     console.log('Deleting student with ID:', id);
-    await this.studentsService.delete(id);
-    return true;
+    const result = await this.studentsService.delete(id, {
+      authorization: token,
+    });
+    if (result) {
+      return result;
+    } else {
+      return false;
+    }
   }
-  @Mutation(() => StudentType) 
+  @Mutation(() => LoginResponse)
   async loginStudent(@Args('loginInput') loginInput: LoginInput) {
     console.log('Logging in student:', loginInput);
-    const student = await this.studentsService.loginStudent(loginInput.email, loginInput.password);
+    const student = await this.studentsService.loginStudent(
+      loginInput.email,
+      loginInput.password,
+    );
     if (!student) {
       throw new Error('Invalid credentials');
     }

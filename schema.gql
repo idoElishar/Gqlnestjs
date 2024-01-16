@@ -79,7 +79,7 @@ type Mutation {
   addStudent(createStudentInput: StudentInput!): StudentType!
   updateStudent(id: String!, updateStudentInput: StudentInput!): StudentType!
   deleteStudent(id: String!): Boolean!
-  loginStudent(loginInput: LoginInput!): StudentType!
+  loginStudent(loginInput: LoginInput!): LoginResponse!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!

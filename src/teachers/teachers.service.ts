@@ -58,7 +58,7 @@ export class TeachersService {
     console.log('teacher ' + teacher);
 
     if (!teacher) {
-      throw new UnauthorizedException('פרטי ההתחברות אינם נכונים');
+      throw new UnauthorizedException('פרטי המייל אינם נכונים');
     }
 
     if (teacher.password !== password) {

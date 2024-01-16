@@ -140,7 +140,6 @@ export class TeachersResolver {
     return result;
   }
 
-
   @Mutation(() => LoginResponse)
   async login(
     @Args('email') email: string,
