@@ -19,14 +19,75 @@ export class StudentsResolver {
   }
   @Query(() => [StudentType])
   async Students() {
-    return this.studentsService.findAll();
+    const cachedUsers = await this.redisService.client.keys('student:*');
+    if (cachedUsers.length > 0) {
+      const usersFromRedis = await Promise.all(
+        cachedUsers.map((key) => this.redisService.client.get(key)),
+      );
+      console.log('Students from Redis:', usersFromRedis);
+      return usersFromRedis.map((userJson) => {
+        const user = JSON.parse(userJson);
+        return {
+          ...user,
+          id: user._id,
+          _id: undefined,
+        };
+      });
+    } else {
+      const students = await this.studentsService.findAll();
+      for (const student of students) {
+        const key = `student:${student.id}`;
+        const value = JSON.stringify(student);
+        await this.redisService.client.set(key, value);
+      }
+      console.log('students from mongodb');
+
+      return students;
+    }
   }
 
   @Query(() => StudentType)
   async Student(@Args('id') id: string) {
-    console.log('Fetching teacher from the service:', id);
+    const cacheKey = `student:${id}`;
+    const cachedStudent = await this.redisService.client.get(cacheKey);
+  
+    console.log('Data retrieved from Redis:', cachedStudent);
+  
+    if (cachedStudent) {
+      console.log('Raw data from Redis:', cachedStudent);
+      let cachedData;
+      try {
+        cachedData = JSON.parse(cachedStudent);
+        console.log('Parsed data from Redis:', cachedData);
+      } catch (e) {
+        console.error('Failed to parse data from Redis:', e);
+        return null;
+      }
+  
+     
+  
+      const student = {
+        ...cachedData,
+        id: cachedData._id,
+      };
+  
+      console.log('Processed student data:', student);
+      return student;
+    }
+  
+    console.log('Fetching student from the service:', id);
     const student = await this.studentsService.findById(id);
-    return student;
+  
+    if (student) {
+      console.log('Student data from service:', student);
+      await this.redisService.client.set(cacheKey, JSON.stringify(student));
+      return student;
+    } else {
+      console.log('No student found with id:', id);
+      return null;
+   
+  
+  }
   }
   @Mutation(() => StudentType)
   async addStudent(

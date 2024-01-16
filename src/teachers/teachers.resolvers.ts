@@ -5,16 +5,14 @@ import { TeachersService } from './Teachers.service';
 import { LoginResponse, TeacherType } from 'src/dto/createteacher';
 import { TeacherInput } from 'src/inputs/teacher.inputs';
 import { RedisService } from 'src/redis/redis.service';
-import {  UsePipes, ValidationPipe } from '@nestjs/common';
-
-
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 @Resolver()
 export class TeachersResolver {
   constructor(
     private readonly teachersService: TeachersService,
-    private readonly redisService: RedisService, 
-  ) { }
+    private readonly redisService: RedisService,
+  ) {}
   @Query(() => String)
   async hello() {
     return 'hello';
@@ -32,7 +30,7 @@ export class TeachersResolver {
 
       return usersFromRedis.map((userJson) => {
         const user = JSON.parse(userJson);
-        return { ...user, id: user._id, _id: undefined }; 
+        return { ...user, id: user._id, _id: undefined };
       });
     }
 
@@ -55,7 +53,7 @@ export class TeachersResolver {
 
       const teacher = {
         ...cachedData._doc,
-        id: cachedData._doc._id
+        id: cachedData._doc._id,
       };
 
       console.log('Processed teacher data:', teacher);
@@ -68,19 +66,13 @@ export class TeachersResolver {
     if (teacher) {
       console.log('Teacher data:', teacher);
 
-      await this.redisService.client.set(
-        cacheKey,
-        JSON.stringify(teacher)
-      );
+      await this.redisService.client.set(cacheKey, JSON.stringify(teacher));
     } else {
       console.error('Teacher not found:', id);
     }
 
     return teacher;
   }
-
-
-
 
   @Mutation(() => TeacherType)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -89,34 +81,34 @@ export class TeachersResolver {
     @Args('input') input: TeacherInput,
   ) {
     const updatedTeacher = await this.teachersService.update(id, input);
-  
+
     if (updatedTeacher) {
       console.log('Updated teacher data:', updatedTeacher);
-  
+
       const cacheKey = `teacher:${id}`;
-  
+
       const cachedTeacher = await this.redisService.client.get(cacheKey);
-  
+
       if (cachedTeacher) {
         console.log('Teacher found in Redis cache, updating:', id);
-  
+
         await this.redisService.client.set(
           cacheKey,
-          JSON.stringify(updatedTeacher)
+          JSON.stringify(updatedTeacher),
         );
       } else {
         console.log('Teacher not found in Redis cache, adding:', id);
-  
+
         await this.redisService.client.set(
           cacheKey,
-          JSON.stringify(updatedTeacher)
+          JSON.stringify(updatedTeacher),
         );
       }
       console.log('Updated/Added teacher data in Redis cache:', id);
     } else {
       console.error('Failed to update teacher:', id);
     }
-  
+
     return updatedTeacher;
   }
   @Mutation(() => Boolean)
@@ -125,18 +117,20 @@ export class TeachersResolver {
     @Context() context: any,
   ): Promise<boolean> {
     const token = context.req.headers.authorization;
-    const result = await this.teachersService.delete(id, { authorization: token });
+    const result = await this.teachersService.delete(id, {
+      authorization: token,
+    });
     if (result) {
       console.log('Teacher deleted from database:', id);
-  
+
       const cacheKey = `teacher:${id}`;
-  
+
       await this.redisService.client.del(cacheKey);
       console.log('Teacher removed from Redis cache:', id);
     } else {
       console.error('Failed to delete teacher:', id);
     }
-  
+
     return result;
   }
 
