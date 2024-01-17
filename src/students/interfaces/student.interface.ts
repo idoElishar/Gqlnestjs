@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Document } from 'mongoose';
 
-interface Course {
+export interface Course {
     name: string;
   }
   

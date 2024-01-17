@@ -65,8 +65,6 @@ export class StudentsResolver {
         return null;
       }
   
-     
-  
       const student = {
         ...cachedData,
         id: cachedData._id,

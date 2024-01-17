@@ -62,9 +62,9 @@ type TopicCovered {
 
 type Query {
   hello: String!
-  cats: [CatType!]!
+  findAll: [CatType!]!
   cat(id: String!): CatType!
-  Students: [StudentType!]!
+  findAllStudents: [StudentType!]!
   Student(id: String!): StudentType!
   Teachers: [TeacherType!]!
   Teacher(id: String!): TeacherType!

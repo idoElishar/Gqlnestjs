@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StudentSchema } from './students.schema';
 import { StudentsService } from './Students.service';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisService } from 'src/redis/redis.service';
+import { RedisService } from '../redis/redis.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Student', schema: StudentSchema }]),

@@ -22,13 +22,10 @@ export class TopicCoveredInput {
   @Field()
   @IsString()
   readonly topic: string;
-
-
 }
 
 @InputType()
 export class CourseInput {
-
 
   @Field()
   @IsString()
