@@ -12,7 +12,7 @@ import { JwtService } from '@nestjs/jwt'; // ייבוא JwtService
 @Injectable()
 export class TeachersService {
   constructor(
-    @InjectModel('Teacher') private TeacherModel: Model<Teacher>,
+    @InjectModel('Teacher') public TeacherModel: Model<Teacher>,
     private jwtService: JwtService, // הוספת JwtService כתלות
   ) {}
 
