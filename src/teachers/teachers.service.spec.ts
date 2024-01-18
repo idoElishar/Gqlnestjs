@@ -2,7 +2,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { TeachersService } from './Teachers.service';
-import { Teacher } from './interfaces/teacher.interface';
+// import { Teacher } from './interfaces/teacher.interface';
 import { JwtService } from '@nestjs/jwt';
 
 class MockTeacherModel {
