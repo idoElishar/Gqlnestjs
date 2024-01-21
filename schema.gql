@@ -40,6 +40,7 @@ type Course {
 type CourseType {
   id: ID!
   courseName: String!
+  rating: Float!
   description: String!
   lectures: [Lecture!]!
   exercises: [Exercise!]!
@@ -123,6 +124,7 @@ input TeacherInput {
 
 input CourseInput {
   courseName: String!
+  rating: Float!
   description: String!
   lectures: [LectureInput!]!
   exercises: [ExerciseInput!]!

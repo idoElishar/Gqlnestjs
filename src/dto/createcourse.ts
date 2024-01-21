@@ -9,7 +9,8 @@ export class CourseType {
 
   @Field()
   readonly courseName: string;
-
+  @Field()
+  readonly rating: number;
   @Field()
   readonly description: string;
 

@@ -16,6 +16,8 @@ topic:String
 
 const CourseSchema = new mongoose.Schema({
 courseName: { type: String, required: true },
+rating: { type: Number, required: true},
+
 description: String,
 lectures: [LectureSchema],
 exercises: [ExerciseSchema],

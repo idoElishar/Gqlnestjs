@@ -31,6 +31,9 @@ export class CourseInput {
   @IsString()
   @IsNotEmpty()
   readonly courseName: string;
+  @Field()
+  @IsNotEmpty()
+  readonly rating: number;
 
   @Field()
   @IsString()

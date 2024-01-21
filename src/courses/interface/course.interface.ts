@@ -15,6 +15,7 @@ interface TopicCovered {
 
 export interface Course extends Document {
   readonly courseName: string;
+  rating: { type: number, required: true},
   readonly description: string;
   readonly lectures: Lecture[];
   readonly exercises: Exercise[];
