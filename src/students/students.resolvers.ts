@@ -12,7 +12,7 @@ import { LoginResponse } from '../dto/createteacher';
 export class StudentsResolver {
   constructor(
     private readonly studentsService: StudentsService,
-    private readonly redisService: RedisService, // הוסף את RedisService
+    private readonly redisService: RedisService, 
   ) {}
   @Query(() => String)
   async hello() {
@@ -87,6 +87,11 @@ export class StudentsResolver {
    
   
   }
+  }
+  @Query(() => [StudentType])
+  async findStudentsByName(@Args('name') name: string) {
+    console.log(`Fetching students with name: ${name}`);
+    return this.studentsService.findByName(name);
   }
   @Mutation(() => StudentType)
   async addStudent(

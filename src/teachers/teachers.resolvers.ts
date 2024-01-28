@@ -73,7 +73,11 @@ export class TeachersResolver {
 
     return teacher;
   }
-
+  @Query(() => [TeacherType])
+  async findTeacherByName(@Args('name') name: string) {
+    console.log(`Fetching Teacher with name: ${name}`);
+    return this.teachersService.findByName(name);
+  }
   @Mutation(() => TeacherType)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async updateTeacher(

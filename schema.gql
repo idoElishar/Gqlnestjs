@@ -67,8 +67,10 @@ type Query {
   cat(id: String!): CatType!
   findAllStudents: [StudentType!]!
   Student(id: String!): StudentType!
+  findStudentsByName(name: String!): [StudentType!]!
   Teachers: [TeacherType!]!
   Teacher(id: String!): TeacherType!
+  findTeacherByName(name: String!): [TeacherType!]!
   Courses: [CourseType!]!
   Course(id: String!): CourseType!
 }

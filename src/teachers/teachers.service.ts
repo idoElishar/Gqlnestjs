@@ -13,7 +13,7 @@ import { JwtService } from '@nestjs/jwt'; // ייבוא JwtService
 export class TeachersService {
   constructor(
     @InjectModel('Teacher') public TeacherModel: Model<Teacher>,
-    private jwtService: JwtService, // הוספת JwtService כתלות
+    private jwtService: JwtService, 
   ) {}
 
   async create(createTeacherDto: TeacherInput): Promise<Teacher> {
@@ -27,6 +27,9 @@ export class TeachersService {
 
   async findById(TeacherId: string): Promise<Teacher> {
     return this.TeacherModel.findById(TeacherId).exec();
+  }
+  async findByName(name: string): Promise<Teacher[]> {
+    return this.TeacherModel.find({ name:name }).exec();
   }
   async update(TeacherId: string, updateData: TeacherInput): Promise<Teacher> {
     return this.TeacherModel.findByIdAndUpdate(TeacherId, updateData, {

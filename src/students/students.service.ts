@@ -21,6 +21,9 @@ export class StudentsService {
   async findById(id: string): Promise<Student> {
     return this.StudentModel.findById(id).exec();
   }
+  async findByName(name: string): Promise<Student[]> {
+    return this.StudentModel.find({ name:name }).exec();
+  }
   async create(createStudentDto: StudentInput): Promise<Student> {
     const createdStudent = new this.StudentModel(createStudentDto);
     return createdStudent.save();
