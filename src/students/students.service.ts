@@ -63,6 +63,14 @@ export class StudentsService {
     const payload = { email: student.email, sub: student.id };
     return {
       access_token: this.jwtService.sign(payload),
+      student: {
+        id: student.id,
+        name: student.name,
+        email: student.email,
+        courses: student.courses,
+        address: student.address,
+        phone: student.phone,
+      },
     };
   }
 }

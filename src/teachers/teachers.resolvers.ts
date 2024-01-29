@@ -143,6 +143,8 @@ export class TeachersResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ) {
+    console.log(await this.teachersService.login(email, password));
+    
     return this.teachersService.login(email, password);
   }
 }

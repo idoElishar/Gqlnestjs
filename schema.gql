@@ -20,8 +20,38 @@ type TeacherType {
   password: String!
 }
 
+type Teacher {
+  id: String!
+  name: String!
+  email: String!
+  course: String!
+  address: String!
+  phone: String!
+  images: String
+}
+
 type LoginResponse {
   access_token: String!
+  teacher: Teacher!
+}
+
+type StudentType1 {
+  id: String!
+  name: String!
+  phone: String!
+  address: String!
+  email: String!
+  courses: [Course1!]!
+  password: String!
+}
+
+type LoginStudentResponse {
+  access_token: String!
+  student: StudentType1!
+}
+
+type Course1 {
+  name: String!
 }
 
 type StudentType {
@@ -82,7 +112,7 @@ type Mutation {
   addStudent(createStudentInput: StudentInput!): StudentType!
   updateStudent(id: String!, updateStudentInput: StudentInput!): StudentType!
   deleteStudent(id: String!): Boolean!
-  loginStudent(loginInput: LoginInput!): LoginResponse!
+  loginStudent(loginInput: LoginInput!): LoginStudentResponse!
   updateTeacher(id: String!, input: TeacherInput!): TeacherType!
   deleteTeacher(id: String!): Boolean!
   login(email: String!, password: String!): LoginResponse!

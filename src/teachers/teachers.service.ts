@@ -58,7 +58,6 @@ export class TeachersService {
 
   async login(email: string, password: string): Promise<any> {
     const teacher = await this.TeacherModel.findOne({ email }).exec();
-    console.log('teacher ' + teacher);
 
     if (!teacher) {
       throw new UnauthorizedException('פרטי המייל אינם נכונים');
@@ -71,6 +70,15 @@ export class TeachersService {
     const payload = { email: teacher.email, sub: teacher.id };
     return {
       access_token: this.jwtService.sign(payload),
+      teacher: {
+        id: teacher.id,
+        name: teacher.name,
+        email: teacher.email,
+        course: teacher.course,
+        address: teacher.address,
+        phone: teacher.phone,
+        images: teacher.images,
+      },
     };
-  }
+}
 }

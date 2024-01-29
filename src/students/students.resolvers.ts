@@ -6,7 +6,7 @@ import { StudentType } from '../dto/createstudent.dto';
 
 import { LoginInput, StudentInput } from '../inputs/student.input';
 import { RedisService } from '../redis/redis.service';
-import { LoginResponse } from '../dto/createteacher';
+import {  LoginStudentResponse } from '../dto/createteacher';
 
 @Resolver()
 export class StudentsResolver {
@@ -126,7 +126,7 @@ export class StudentsResolver {
       return false;
     }
   }
-  @Mutation(() => LoginResponse)
+  @Mutation(() => LoginStudentResponse)
   async loginStudent(@Args('loginInput') loginInput: LoginInput) {
     console.log('Logging in student:', loginInput);
     const student = await this.studentsService.loginStudent(
@@ -136,6 +136,8 @@ export class StudentsResolver {
     if (!student) {
       throw new Error('Invalid credentials');
     }
+    console.log(    "student from resolvers"    );
+    console.log(student);
     return student;
   }
 }
